@@ -46,10 +46,18 @@
             </p>
 
             <div class="confirm-card__actions">
-              <button type="button" class="confirm-btn confirm-btn--secondary" (click)="onConfirmCancel()">
+              <button
+                type="button"
+                class="confirm-btn confirm-btn--secondary"
+                (click)="onConfirmCancel()"
+              >
                 Cancel
               </button>
-              <button type="button" class="confirm-btn confirm-btn--primary" (click)="onConfirmProceed()">
+              <button
+                type="button"
+                class="confirm-btn confirm-btn--primary"
+                (click)="onConfirmProceed()"
+              >
                 Confirm
               </button>
             </div>
@@ -159,11 +167,15 @@
                 placeholder="Tap here..."
                 [class.error]="
                   isFieldInvalid('confirmPassword') ||
-                  (form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched)
+                  (form.errors?.['passwordMismatch'] &&
+                    form.get('confirmPassword')?.touched)
                 "
                 class="form-input"
               />
-              @if (isFieldInvalid('confirmPassword') || (form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched)) {
+              @if (
+                isFieldInvalid('confirmPassword') ||
+                (form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched)
+              ) {
                 <div class="error-text">{{ getConfirmPasswordErrorMessage() }}</div>
               }
             </div>
@@ -189,6 +201,8 @@
                 [class.error]="isFieldInvalid('roles')"
                 class="form-input"
               >
+                <!-- Critical fix: selectedItems template is responsible for the value display.
+                     We only render placeholder when empty, preventing a second placeholder line. -->
                 <ng-template let-value pTemplate="selectedItems">
                   @if (value && value.length) {
                     <div class="selected-chips">

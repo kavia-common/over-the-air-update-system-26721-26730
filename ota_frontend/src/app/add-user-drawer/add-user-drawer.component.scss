@@ -396,11 +396,10 @@
   }
 }
 
-/* Mobile: stack label above control */
 /* Confirmation box */
 .confirm-card {
   width: 100%;
-  max-width: 520px; /* keeps the card from spanning full drawer width; matches screenshot feel */
+  max-width: 520px; /* matches screenshot feel */
   background: var(--confirm-card-bg);
   border-radius: 4px;
   overflow: hidden;
@@ -468,7 +467,7 @@
   color: var(--confirm-btn-primary-text);
 }
 
-/* Keep the drawer canvas tint behind the confirmation card (screenshot shows a greyer canvas) */
+/* Keep the drawer canvas tint behind the confirmation card */
 ::ng-deep .add-user-modal .p-drawer-content {
   background: var(--confirm-canvas-bg);
 }
