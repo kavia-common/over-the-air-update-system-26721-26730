@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/over-the-air-update-system-26721-26730/ota_frontend"
+}
