@@ -11,6 +11,8 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { AddUserModalComponent } from '../../../add-user-modal/add-user-modal.component';
+import { EditUserModalComponent } from './edit-user-modal/edit-user-modal.component';
+import { EditableUser } from './edit-user-drawer/edit-user-drawer.component';
 
 /* PrimeNG */
 import { ButtonModule } from 'primeng/button';
@@ -53,6 +55,7 @@ import { MessageService } from 'primeng/api';
     ToastModule,
 
     AddUserModalComponent,
+    EditUserModalComponent,
   ],
   providers: [MessageService],
   templateUrl: './user.component.html',
@@ -75,6 +78,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
   // Add user modal
   showAddUserModal = false;
+
+  // Edit user modal
+  showEditUserModal = false;
+  selectedUserForEdit: EditableUser | null = null;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -174,6 +181,31 @@ export class UserComponent implements OnInit, OnDestroy {
     this.messageService.add({
       severity: 'success',
       summary: 'User added',
+      life: 2500,
+    });
+    this.loadUsers();
+  }
+
+  // PUBLIC_INTERFACE
+  editUser(user: EditableUser) {
+    /** Opens the Edit User drawer with the selected user pre-filled. */
+    this.selectedUserForEdit = user;
+    this.showEditUserModal = true;
+  }
+
+  // PUBLIC_INTERFACE
+  onEditUserModalClose() {
+    /** Handles Edit drawer close event. */
+    this.showEditUserModal = false;
+  }
+
+  // PUBLIC_INTERFACE
+  onUserUpdated() {
+    /** Handles user updated event; refresh list. */
+    this.showEditUserModal = false;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'User updated',
       life: 2500,
     });
     this.loadUsers();

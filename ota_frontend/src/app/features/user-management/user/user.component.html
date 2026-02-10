@@ -7,10 +7,45 @@
     </button>
   </header>
 
+  <!-- Minimal list to demonstrate Edit wiring in this template repo -->
+  <div class="user-page__list" style="margin-top: 16px; display: grid; gap: 10px;">
+    @for (user of users; track user.id) {
+      <p-card>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+          <div style="display: grid; gap: 2px;">
+            <div style="font-weight: 600; color: #111827;">
+              {{ user.firstName || '' }} {{ user.lastName || '' }}
+            </div>
+            <div style="font-size: 13px; color: #374151;">{{ user.email }}</div>
+          </div>
+
+          <div style="display: inline-flex; gap: 8px; align-items: center;">
+            <button
+              type="button"
+              pButton
+              label="Edit"
+              class="p-button-secondary"
+              (click)="editUser(user)"
+              [disabled]="isLoggedInOrRootUser(user)"
+            ></button>
+          </div>
+        </div>
+      </p-card>
+    }
+  </div>
+
   <app-add-user-modal
     [visible]="showAddUserModal"
     (visibleChange)="showAddUserModal = $event"
     (close)="onAddUserModalClose()"
     (userAdded)="onUserAdded()"
+  />
+
+  <app-edit-user-modal
+    [visible]="showEditUserModal"
+    (visibleChange)="showEditUserModal = $event"
+    [user]="selectedUserForEdit"
+    (close)="onEditUserModalClose()"
+    (userUpdated)="onUserUpdated()"
   />
 </section>

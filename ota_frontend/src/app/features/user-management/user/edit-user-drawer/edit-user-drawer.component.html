@@ -1,0 +1,303 @@
+<p-drawer
+  [visible]="visible"
+  position="right"
+  [modal]="true"
+  [closeOnEscape]="true"
+  [dismissible]="false"
+  [showCloseIcon]="false"
+  (onHide)="onClose()"
+  styleClass="edit-user-modal"
+  [style]="{ width: '560px' }"
+>
+  <ng-template pTemplate="header">
+    <div class="modal-header" role="banner">
+      <div class="header-left">
+        <h2 class="modal-title">Edit User</h2>
+      </div>
+
+      <button
+        type="button"
+        class="icon-btn close-btn"
+        (click)="onClose()"
+        aria-label="Close dialog"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- Centered overlay confirmation modal (outside drawer content). -->
+  @if (showConfirmation) {
+    <div
+      class="confirm-overlay"
+      role="presentation"
+      (click)="onConfirmCancel()"
+      (keydown.escape)="onConfirmCancel()"
+      tabindex="-1"
+    >
+      <section
+        class="confirm-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirmTitle"
+        aria-describedby="confirmMsg"
+        (click)="$event.stopPropagation()"
+      >
+        <header class="confirm-dialog__header">
+          <div id="confirmTitle" class="confirm-dialog__title">Edit User</div>
+        </header>
+
+        <div class="confirm-dialog__body">
+          <p id="confirmMsg" class="confirm-dialog__msg">
+            Are you sure you want to edit user?
+          </p>
+
+          <div class="confirm-dialog__actions">
+            <button
+              type="button"
+              class="confirm-btn confirm-btn--secondary"
+              (click)="onConfirmCancel()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="confirm-btn confirm-btn--primary"
+              (click)="onConfirmProceed()"
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="add-user-form">
+    <div class="form-content">
+      <!-- ================== CARD 1: Identity ================== -->
+      <div class="section-card section-card--identity">
+        <div class="form-row">
+          <label for="firstName" class="form-label">
+            First Name <span class="required-asterisk">*</span>
+          </label>
+
+          <div class="control">
+            <input
+              id="firstName"
+              type="text"
+              pInputText
+              formControlName="firstName"
+              placeholder="Tap here..."
+              [class.error]="isFieldInvalid('firstName')"
+              class="form-input"
+            />
+            @if (isFieldInvalid('firstName')) {
+              <div class="error-text">{{ getFieldErrorMessage('firstName') }}</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="lastName" class="form-label">
+            Last Name <span class="required-asterisk">*</span>
+          </label>
+
+          <div class="control">
+            <input
+              id="lastName"
+              type="text"
+              pInputText
+              formControlName="lastName"
+              placeholder="Tap here..."
+              [class.error]="isFieldInvalid('lastName')"
+              class="form-input"
+            />
+            @if (isFieldInvalid('lastName')) {
+              <div class="error-text">{{ getFieldErrorMessage('lastName') }}</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="email" class="form-label">
+            Email <span class="required-asterisk">*</span>
+          </label>
+
+          <div class="control">
+            <input
+              id="email"
+              type="email"
+              pInputText
+              formControlName="email"
+              placeholder="Tap here..."
+              [class.error]="isFieldInvalid('email')"
+              class="form-input"
+            />
+            @if (isFieldInvalid('email')) {
+              <div class="error-text">{{ getFieldErrorMessage('email') }}</div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- ================== CARD 2: Credentials ================== -->
+      <div class="section-card section-card--credentials">
+        <div class="form-row">
+          <label for="password" class="form-label">
+            Password
+          </label>
+
+          <div class="control">
+            <input
+              id="password"
+              type="password"
+              pInputText
+              formControlName="password"
+              placeholder="Tap here..."
+              [class.error]="isFieldInvalid('password')"
+              class="form-input"
+            />
+            @if (isFieldInvalid('password')) {
+              <div class="error-text">{{ getFieldErrorMessage('password') }}</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="confirmPassword" class="form-label">
+            Confirm Password
+          </label>
+
+          <div class="control">
+            <input
+              id="confirmPassword"
+              type="password"
+              pInputText
+              formControlName="confirmPassword"
+              placeholder="Tap here..."
+              [class.error]="
+                isFieldInvalid('confirmPassword') ||
+                (form.get('confirmPassword')?.errors?.['passwordMismatch'] &&
+                  form.get('confirmPassword')?.touched)
+              "
+              class="form-input"
+            />
+            @if (
+              isFieldInvalid('confirmPassword') ||
+              (form.get('confirmPassword')?.errors?.['passwordMismatch'] &&
+                form.get('confirmPassword')?.touched)
+            ) {
+              <div class="error-text">{{ getConfirmPasswordErrorMessage() }}</div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- ================== CARD 3: Role mapping/unmapping ================== -->
+      <div class="section-card section-card--other">
+        <!-- Roles (single-select) -->
+        <div class="form-row">
+          <label for="role" class="form-label">
+            Roles <span class="required-asterisk">*</span>
+          </label>
+
+          <div class="control">
+            <p-select
+              id="role"
+              formControlName="role"
+              [options]="roleOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select Roles"
+              [showClear]="false"
+              [class.error]="isFieldInvalid('role')"
+              class="form-input"
+            >
+            </p-select>
+
+            @if (isFieldInvalid('role')) {
+              <div class="error-text">{{ getFieldErrorMessage('role') }}</div>
+            }
+          </div>
+        </div>
+
+        <!-- NATCOS (single-select) -->
+        <div class="form-row">
+          <label for="natcos" class="form-label">
+            NATCOS <span class="required-asterisk">*</span>
+          </label>
+
+          <div class="control">
+            <p-select
+              id="natcos"
+              formControlName="natcos"
+              [options]="natcosOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select NATCOS"
+              [showClear]="false"
+              [class.error]="isFieldInvalid('natcos')"
+              class="form-input"
+            >
+            </p-select>
+
+            @if (isFieldInvalid('natcos')) {
+              <div class="error-text">{{ getFieldErrorMessage('natcos') }}</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row form-row--status">
+          <label for="status-active" class="form-label">
+            Status Type <span class="required-asterisk">*</span>
+          </label>
+
+          <div class="control">
+            <div class="radio-options" role="radiogroup" aria-label="Status Type">
+              <div class="radio-option">
+                <input
+                  id="status-active"
+                  type="radio"
+                  formControlName="status"
+                  value="active"
+                  class="radio-input"
+                />
+                <label for="status-active" class="radio-label">Active</label>
+              </div>
+
+              <div class="radio-option">
+                <input
+                  id="status-inactive"
+                  type="radio"
+                  formControlName="status"
+                  value="inactive"
+                  class="radio-input"
+                />
+                <label for="status-inactive" class="radio-label">Inactive</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        class="p-button-secondary cancel-btn"
+        (click)="onClose()"
+      ></button>
+      <button
+        type="submit"
+        pButton
+        label="Save"
+        class="p-button add-btn"
+        [disabled]="form.invalid || loading"
+        [loading]="loading"
+      ></button>
+    </div>
+  </form>
+</p-drawer>
