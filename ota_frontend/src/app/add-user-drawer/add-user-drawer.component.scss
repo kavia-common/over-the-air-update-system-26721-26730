@@ -253,6 +253,12 @@
       display: none !important;
     }
 
+    /* Mapping dropdown panels: keep them tidy and consistent. */
+    .p-multiselect-panel,
+    .p-select-overlay {
+      max-height: 220px;
+    }
+
     .placeholder {
       color: #94a3b8;
       font-size: 13px;
