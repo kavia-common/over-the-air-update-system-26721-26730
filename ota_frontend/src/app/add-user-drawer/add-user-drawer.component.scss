@@ -1,4 +1,4 @@
-/* Style variables (aligned to design notes) */
+/* Style variables */
 :host {
   --white: #ffffff;
   --text-900: #111827;
@@ -10,48 +10,34 @@
   --danger: #e53935;
   --accent: #e2007e;
   --accent-500: #ec4899;
-
-
 }
 
-/* Drawer Header */
+/* Drawer */
 ::ng-deep .add-user-modal .p-drawer-header {
   display: flex;
   align-items: center;
   padding: 0;
   border: none;
-  height: auto;
   background: var(--white);
 }
 
 ::ng-deep .add-user-modal .p-drawer-header .p-drawer-header-content {
   flex: 1 1 auto;
-  min-width: 0;
-  width: 100%;
 }
 
-/* Hide PrimeNG's default close icon (we render our own) */
+/* Hide PrimeNG close icon */
 ::ng-deep .add-user-modal .p-drawer-header .p-drawer-header-icons,
 ::ng-deep .add-user-modal .p-drawer-close {
   display: none !important;
 }
 
-/* Custom header */
+/* Header */
 .modal-header {
   display: flex;
   align-items: center;
-  width: 100%;
   padding: 12px 16px;
   border-bottom: 1px solid var(--border-200);
   background: var(--white);
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1 1 auto;
-  min-width: 0;
 }
 
 .modal-title {
@@ -73,7 +59,6 @@
   border-radius: 6px;
   cursor: pointer;
   color: var(--text-700);
-  transition: color 0.15s ease, background-color 0.15s ease;
 
   i {
     font-size: 16px;
@@ -94,7 +79,7 @@
   margin-left: auto;
 }
 
-/* Drawer content */
+/* Content */
 .add-user-form {
   display: flex;
   flex-direction: column;
@@ -113,29 +98,21 @@
 .form-content {
   flex: 1;
   padding: 16px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  min-width: 0;
 }
 
-/* ------------------------------
-   Group boxes (frames/cards)
--------------------------------*/
+/* Group boxes (frames/cards) */
 .section-card {
   background: var(--white);
   border: 1px solid var(--border-300);
   border-radius: 16px;
   padding: 16px;
-  width: 100%;
-  box-sizing: border-box;
 }
 
-/* ------------------------------
-   Two-column form rows (matches screenshot)
--------------------------------*/
+/* Two-column form rows (matches screenshot) */
 .form-row {
   display: grid;
   grid-template-columns: 132px 1fr;
@@ -151,7 +128,7 @@
   font-size: 12.5px;
   font-weight: 500;
   color: var(--label-warm);
-  line-height: 32px; /* aligns label vertically with compact controls */
+  line-height: 32px;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -163,9 +140,7 @@
   }
 }
 
-.control {
-  min-width: 0;
-}
+
 
 .form-input {
   width: 100%;
@@ -173,18 +148,13 @@
   color: #1f2937;
   border: 1px solid var(--border-300);
   border-radius: 8px;
-  padding: 6px 10px; /* compact */
-  height: 32px; /* compact like screenshot */
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  padding: 6px 10px;
+  height: 32px;
 
   &:focus {
     border-color: var(--accent-500);
     box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.12);
     outline: none;
-  }
-
-  &::placeholder {
-    color: #94a3b8;
   }
 
   &.error {
@@ -198,71 +168,111 @@
   }
 }
 
-/* PrimeNG input overrides to match compact height */
-::ng-deep {
-  .add-user-modal {
-    .p-inputtext {
-      height: 32px;
-      padding: 6px 10px;
-      border-radius: 8px;
-      border-color: var(--border-300);
+/* PrimeNG overrides */
+::ng-deep .add-user-modal {
+  .p-inputtext {
+    height: 32px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border-color: var(--border-300);
+    font-size: 13px;
+  }
+
+  .p-select,
+  .p-multiselect {
+    width: 100%;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border-300);
+    display: flex;
+    align-items: center;
+
+    .p-select-label,
+    .p-multiselect-label {
+      padding: 0 10px !important;
       font-size: 13px;
+      line-height: 30px;
     }
 
-    .p-dropdown,
+    .p-select-trigger,
+    .p-multiselect-trigger {
+      width: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none !important;
+      background: transparent !important;
+      color: #6b7280;
+    }
+  }
+
+  /* Role-mapping area uses tighter controls + smaller radius (per screenshot) */
+  .section-card--other {
     .p-select,
     .p-multiselect {
-      width: 100%;
-      height: 32px;
-      border-radius: 8px;
-      border: 1px solid var(--border-300);
-      display: flex;
-      align-items: center;
-
-      .p-dropdown-label,
-      .p-select-label,
-      .p-multiselect-label {
-        padding: 0 10px !important;
-        font-size: 13px;
-        line-height: 30px;
-      }
-
-      .p-dropdown-trigger,
-      .p-select-trigger,
-      .p-multiselect-trigger {
-        width: 32px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border: none !important;
-        background: transparent !important;
-        color: #6b7280;
-      }
+      height: 30px;
+      border-radius: 4px;
+      border-color: #dadde3;
     }
 
-    /* Selected chips in multiselect: keep our custom selectedItems template as the ONLY visible content.
-       This prevents any extra placeholder/label line from appearing under the chips. */
-    .p-multiselect-label-container {
-      display: flex;
-      align-items: center;
-      overflow: hidden;
+    .p-select-label {
+      line-height: 28px;
+      font-size: 12px;
+      color: #2b2f38;
     }
 
-    /* PrimeNG may still render an internal label span; hide it so it can't appear as a second line. */
-    .p-multiselect-label {
-      display: none !important;
-    }
-
-    /* Mapping dropdown panels: keep them tidy and consistent. */
-    .p-multiselect-panel,
-    .p-select-overlay {
-      max-height: 220px;
+    .p-select-trigger,
+    .p-multiselect-trigger {
+      width: 28px;
+      color: #2b2f38;
     }
 
     .placeholder {
-      color: #94a3b8;
-      font-size: 13px;
+      font-size: 12px;
+      color: #a7adb7;
     }
+
+    /* Dropdown panels (compact + minimal shadow) */
+    .p-multiselect-panel,
+    .p-select-overlay {
+      border: 1px solid #dadde3;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(17, 24, 39, 0.06);
+      overflow: hidden;
+      max-height: 180px;
+    }
+
+    .p-multiselect-panel .p-multiselect-items,
+    .p-select-overlay .p-select-list {
+      padding: 4px 0;
+    }
+
+    .p-multiselect-panel .p-multiselect-item,
+    .p-select-overlay .p-select-option {
+      padding: 6px 10px;
+      font-size: 12px;
+      color: #2b2f38;
+
+      &:hover {
+        background: #f4f6f8;
+      }
+    }
+
+    .p-multiselect-panel .p-multiselect-item.p-highlight,
+    .p-select-overlay .p-select-option.p-highlight {
+      background: #e9f2ff;
+      color: #2b2f38;
+    }
+  }
+
+  /* Prevent any extra placeholder/label line under our selectedItems template */
+  .p-multiselect-label-container {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .p-multiselect-label {
+    display: none !important;
   }
 }
 
@@ -301,7 +311,6 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    transition: background-color 0.2s ease;
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.18);
@@ -328,14 +337,12 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  min-height: 32px;
 }
 
 .radio-option {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  cursor: pointer;
 }
 
 .radio-input {
@@ -347,7 +354,6 @@
 .radio-label {
   font-size: 13px;
   color: #1f2937;
-  cursor: pointer;
 }
 
 /* Footer (sticky) */
@@ -385,16 +391,14 @@
   }
 }
 
-/* Confirmation overlay (centered, pale backdrop like screenshot) */
+/* Confirmation overlay (centered) */
 .confirm-overlay {
   position: fixed;
   inset: 0;
-  z-index: 1200; /* above PrimeNG drawer mask/content */
+  z-index: 1200;
   display: grid;
   place-items: center;
   padding: 16px;
-
-  /* Latest screenshot: very light, cool gray wash. */
   background: rgba(232, 236, 240, 0.85);
 }
 
@@ -404,15 +408,11 @@
   background: #ffffff;
   border: 1px solid #e3e7eb;
   border-radius: 6px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  overflow: hidden; /* ensures header strip corners match */
+  overflow: hidden;
 }
 
-/* Distinct header strip (required by screenshot) */
 .confirm-dialog__header {
   background: #eef2f5;
   padding: 8px 12px;
@@ -425,7 +425,7 @@
 }
 
 .confirm-dialog__body {
-  padding: 14px 12px 12px 12px;
+  padding: 14px 12px 12px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -440,7 +440,6 @@
 .confirm-dialog__actions {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
   gap: 8px;
 }
 
@@ -448,10 +447,9 @@
   appearance: none;
   height: 20px;
   padding: 0 12px;
-  border-radius: 10px; /* pill */
+  border-radius: 10px;
   font: 600 10px/20px "Helvetica Neue", Arial, sans-serif;
   cursor: pointer;
-  user-select: none;
 
   &:focus-visible {
     outline: none;
@@ -481,10 +479,6 @@
 }
 
 @media (max-width: 640px) {
-  .form-content {
-    padding: 16px;
-  }
-
   .form-row {
     grid-template-columns: 1fr;
     row-gap: 6px;

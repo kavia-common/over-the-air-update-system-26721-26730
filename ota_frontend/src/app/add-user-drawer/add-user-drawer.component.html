@@ -192,11 +192,36 @@
         </div>
       </div>
 
-      <!-- ================== CARD 3: Roles / NATCOS / Status ================== -->
+      <!-- ================== CARD 3: Role mapping/unmapping ================== -->
       <div class="section-card section-card--other">
         <div class="form-row">
+          <label for="natcos" class="form-label">
+            NatCOS <span class="required-asterisk">*</span>
+          </label>
+
+          <div class="control">
+            <p-select
+              id="natcos"
+              formControlName="natcos"
+              [options]="natcosOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Tap here..."
+              [showClear]="false"
+              [class.error]="isFieldInvalid('natcos')"
+              class="form-input"
+            >
+            </p-select>
+
+            @if (isFieldInvalid('natcos')) {
+              <div class="error-text">{{ getFieldErrorMessage('natcos') }}</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
           <label for="roles" class="form-label">
-            Roles <span class="required-asterisk">*</span>
+            Role Type <span class="required-asterisk">*</span>
           </label>
 
           <div class="control">
@@ -209,10 +234,9 @@
               placeholder="Tap here..."
               [showToggleAll]="true"
               [class.error]="isFieldInvalid('roles')"
-              class="form-input"
+              class="form-input role-type-multiselect"
             >
-              <!-- Critical fix: selectedItems template is responsible for the value display.
-                   We only render placeholder when empty, preventing a second placeholder line. -->
+              <!-- Keep existing display behavior fix; styling is updated to match role-mapping screenshot. -->
               <ng-template let-value pTemplate="selectedItems">
                 @if (value && value.length) {
                   <div class="selected-chips">
@@ -239,31 +263,6 @@
 
             @if (isFieldInvalid('roles')) {
               <div class="error-text">{{ getFieldErrorMessage('roles') }}</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label for="natcos" class="form-label">
-            NATCOS <span class="required-asterisk">*</span>
-          </label>
-
-          <div class="control">
-            <p-select
-              id="natcos"
-              formControlName="natcos"
-              [options]="natcosOptions"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Tap here..."
-              [showClear]="false"
-              [class.error]="isFieldInvalid('natcos')"
-              class="form-input"
-            >
-            </p-select>
-
-            @if (isFieldInvalid('natcos')) {
-              <div class="error-text">{{ getFieldErrorMessage('natcos') }}</div>
             }
           </div>
         </div>
