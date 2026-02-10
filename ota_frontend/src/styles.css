@@ -1,3 +1,6 @@
+/* PrimeIcons styles (PrimeNG v19 no longer ships CSS resources via package exports) */
+@import "primeicons/primeicons.css";
+
 /* Global styles for minimalistic design */
 * {
   margin: 0;

@@ -1,0 +1,409 @@
+/* Style variables (aligned to design notes) */
+:host {
+  --white: #ffffff;
+  --text-900: #111827;
+  --text-700: #374151;
+  --label-warm: #371f32;
+  --border-200: #e5e7eb;
+  --border-300: #e2e8f0;
+  --bg-subtle: #f8fafc;
+  --danger: #e53935;
+  --accent: #e2007e;
+  --accent-500: #ec4899;
+}
+
+/* ------------------------------
+   Drawer Header – layout fixes
+-------------------------------*/
+::ng-deep .add-user-modal .p-drawer-header {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  height: auto;
+  background: var(--white);
+}
+
+::ng-deep .add-user-modal .p-drawer-header .p-drawer-header-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Hide PrimeNG's default close icon (we render our own) */
+::ng-deep .add-user-modal .p-drawer-header .p-drawer-header-icons,
+::ng-deep .add-user-modal .p-drawer-close {
+  display: none !important;
+}
+
+/* ------------------------------
+   Custom header (Add User … ✕)
+-------------------------------*/
+.modal-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-200);
+  background: var(--white);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-900);
+}
+
+.icon-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 6px;
+  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-700);
+  transition: color 0.15s ease, background-color 0.15s ease;
+
+  i {
+    font-size: 16px;
+  }
+
+  &:hover {
+    color: var(--text-900);
+    background-color: rgba(17, 24, 39, 0.04);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.close-btn {
+  margin-left: auto;
+}
+
+/* ------------------------------
+   Drawer content / layout
+-------------------------------*/
+.add-user-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background: var(--bg-subtle);
+}
+
+::ng-deep .add-user-modal .p-drawer-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg-subtle);
+}
+
+.form-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* ------------------------------
+   Group boxes (frames/cards)
+-------------------------------*/
+.section-card {
+  background: var(--white);
+  border: 1px solid var(--border-300);
+  border-radius: 16px;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ------------------------------
+   Two-column form rows (matches screenshot)
+-------------------------------*/
+.form-row {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  column-gap: 16px;
+  align-items: start;
+}
+
+.form-row + .form-row {
+  margin-top: 12px;
+}
+
+.form-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--label-warm);
+  line-height: 32px; /* aligns label vertically with compact controls */
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  .required-asterisk {
+    color: var(--danger);
+    font-weight: 700;
+    line-height: 1;
+  }
+}
+
+.control {
+  min-width: 0;
+}
+
+.form-input {
+  width: 100%;
+  font-size: 13px;
+  color: #1f2937;
+  border: 1px solid var(--border-300);
+  border-radius: 8px;
+  padding: 6px 10px; /* compact */
+  height: 32px; /* compact like screenshot */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: var(--accent-500);
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.12);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+
+  &.error {
+    border-color: var(--danger);
+    background-color: rgba(229, 57, 53, 0.05);
+
+    &:focus {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(229, 57, 53, 0.12);
+    }
+  }
+}
+
+/* PrimeNG input overrides to match compact height */
+::ng-deep {
+  .add-user-modal {
+    .p-inputtext {
+      height: 32px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border-color: var(--border-300);
+      font-size: 13px;
+    }
+
+    .p-dropdown,
+    .p-select,
+    .p-multiselect {
+      width: 100%;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border-300);
+      display: flex;
+      align-items: center;
+
+      .p-dropdown-label,
+      .p-select-label,
+      .p-multiselect-label {
+        padding: 0 10px !important;
+        font-size: 13px;
+        line-height: 30px;
+      }
+
+      .p-dropdown-trigger,
+      .p-select-trigger,
+      .p-multiselect-trigger {
+        width: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none !important;
+        background: transparent !important;
+        color: #6b7280;
+      }
+    }
+
+    /* Selected chips in multiselect dropdown: keep them but ensure they don't break compact control */
+    .p-multiselect-label-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .placeholder {
+      color: #94a3b8;
+      font-size: 13px;
+    }
+  }
+}
+
+.selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 2px 0;
+}
+
+.custom-chip {
+  display: inline-flex;
+  align-items: center;
+  background-color: #ec4899;
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 16px;
+  gap: 6px;
+
+  .chip-label {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .chip-remove {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.18);
+    }
+
+    i {
+      font-size: 11px;
+    }
+  }
+}
+
+.error-text {
+  font-size: 12px;
+  color: var(--danger);
+  margin-top: 6px;
+}
+
+/* Status row alignment: radios on same row */
+.form-row--status .form-label {
+  line-height: 32px;
+}
+
+.radio-options {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 32px;
+}
+
+.radio-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.radio-input {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent-500);
+}
+
+.radio-label {
+  font-size: 13px;
+  color: #1f2937;
+  cursor: pointer;
+}
+
+/* Footer (sticky) */
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-200);
+  background: var(--white);
+  position: sticky;
+  bottom: 0;
+
+  .cancel-btn {
+    background-color: #e5e7eb !important;
+    color: #1f2937 !important;
+    border: none !important;
+    font-weight: 500;
+    min-width: 96px;
+    height: 32px;
+  }
+
+  .add-btn {
+    background-color: var(--accent) !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 500;
+    min-width: 96px;
+    height: 32px;
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Mobile: stack label above control */
+@media (max-width: 640px) {
+  .form-content {
+    padding: 16px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+  }
+
+  .form-label {
+    line-height: 1.2;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+    gap: 8px;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .radio-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding-top: 2px;
+  }
+}
