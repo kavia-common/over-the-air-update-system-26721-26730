@@ -43,29 +43,27 @@
         aria-describedby="confirmMsg"
         (click)="$event.stopPropagation()"
       >
-        <header class="confirm-card__header">
-          <h3 id="confirmTitle" class="confirm-card__title">Add User</h3>
-        </header>
+        <div id="confirmTitle" class="confirm-dialog__title">Confirm</div>
 
-        <div class="confirm-card__body">
-          <p id="confirmMsg" class="confirm-card__msg">Are you sure you want to add user?</p>
+        <p id="confirmMsg" class="confirm-dialog__msg">
+          Are you sure you want to delete this item?
+        </p>
 
-          <div class="confirm-card__actions">
-            <button
-              type="button"
-              class="confirm-btn confirm-btn--secondary"
-              (click)="onConfirmCancel()"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              class="confirm-btn confirm-btn--primary"
-              (click)="onConfirmProceed()"
-            >
-              Confirm
-            </button>
-          </div>
+        <div class="confirm-dialog__actions">
+          <button
+            type="button"
+            class="confirm-btn confirm-btn--secondary"
+            (click)="onConfirmCancel()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="confirm-btn confirm-btn--danger"
+            (click)="onConfirmProceed()"
+          >
+            Delete
+          </button>
         </div>
       </section>
     </div>
