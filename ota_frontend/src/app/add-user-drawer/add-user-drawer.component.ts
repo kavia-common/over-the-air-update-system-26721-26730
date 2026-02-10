@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
@@ -25,6 +26,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
 
+type SelectOption = { label: string; value: string };
+
 /**
  * AddUserModalComponent (implemented in the existing "add-user-drawer" folder to avoid changing app wiring).
  * Uses the provided TS as the base, but:
@@ -49,6 +52,9 @@ import { SelectModule } from 'primeng/select';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+
+    // Needed for API-based option loading (standalone DI scope).
+    HttpClientModule,
 
     DrawerModule,
     ButtonModule,
@@ -119,30 +125,31 @@ export class AddUserDrawerComponent {
 
   private readonly formBuilder = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly http = inject(HttpClient);
 
-  /** Options for dropdowns */
-  roleOptions = [
-    { label: 'Admin', value: 'admin' },
-    { label: 'Manager', value: 'manager' },
-    { label: 'Approver', value: 'approver' },
-    { label: 'Viewer', value: 'viewer' },
-  ];
+  /**
+   * Dropdown options are loaded from backend APIs (no hardcoded options).
+   * Mapping/unmapping behavior remains the same (single role select).
+   */
+  roleOptions: SelectOption[] = [];
+  natcosOptions: SelectOption[] = [];
 
-  natcosOptions = [
-    { label: 'US', value: 'US' },
-    { label: 'UK', value: 'UK' },
-    { label: 'IN', value: 'IN' },
-    { label: 'SG', value: 'SG' },
-    { label: 'AU', value: 'AU' },
-  ];
-
-  statusOptions = [
-    { label: 'Active', value: 'active' },
-    { label: 'Inactive', value: 'inactive' },
-  ];
+  /**
+   * Endpoint base:
+   * - Prefer NG_APP_API_BASE (e.g., "https://example.com")
+   * - Fall back to NG_APP_BACKEND_URL
+   *
+   * IMPORTANT:
+   * These env vars must be provided in the container .env by the orchestrator.
+   */
+  private readonly apiBase =
+    (globalThis as any)?.process?.env?.['NG_APP_API_BASE'] ||
+    (globalThis as any)?.process?.env?.['NG_APP_BACKEND_URL'] ||
+    '';
 
   constructor() {
     this.initializeForm();
+    this.loadDropdownOptions();
   }
 
   initializeForm() {
@@ -168,7 +175,7 @@ export class AddUserDrawerComponent {
     );
   }
 
-  passwordValidator(control: AbstractControl): ValidationErrors | null {
+  private passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {
       return null;
@@ -194,7 +201,7 @@ export class AddUserDrawerComponent {
     return null;
   }
 
-  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+  private passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
 
@@ -204,7 +211,7 @@ export class AddUserDrawerComponent {
     return null;
   }
 
-  getPasswordErrorMessage(): string {
+  private getPasswordErrorMessage(): string {
     const passwordControl = this.form.get('password');
     if (
       !passwordControl ||
@@ -260,19 +267,78 @@ export class AddUserDrawerComponent {
     return '';
   }
 
-  formatFieldName(fieldName: string): string {
+  private formatFieldName(fieldName: string): string {
     return fieldName
       .replace(/([A-Z])/g, ' $1')
       .replace(/^./, (str) => str.toUpperCase())
       .trim();
   }
 
+  private buildApiUrl(path: string): string {
+    // If no base is configured, return a relative URL so it still works behind same-origin proxies.
+    if (!this.apiBase) {
+      return path.startsWith('/') ? path : `/${path}`;
+    }
+    const base = String(this.apiBase).replace(/\/+$/, '');
+    const p = path.startsWith('/') ? path : `/${path}`;
+    return `${base}${p}`;
+  }
+
+  private toOptions(values: string[]): SelectOption[] {
+    // Preserve original mapping/unmapping behavior: value should be the raw role/NATCOS string.
+    return (values || [])
+      .filter((v) => typeof v === 'string')
+      .map((v) => v.trim())
+      .filter((v) => v.length > 0)
+      .map((v) => ({ label: v, value: v }));
+  }
+
+  private loadDropdownOptions() {
+    /**
+     * Authoritative requirements mention:
+     * - Roles endpoint: GET /api/v1/user-roles returning string[]
+     *
+     * NatCOS endpoint: not explicitly shown in the attachment, but this task requires
+     * NatCOS options be API-based as well. We attempt a conventional endpoint:
+     * - GET /api/v1/natcos
+     *
+     * If your backend uses a different path, update NATCOS_OPTIONS_ENDPOINT below.
+     */
+    const ROLE_OPTIONS_ENDPOINT = '/api/v1/user-roles';
+    const NATCOS_OPTIONS_ENDPOINT = '/api/v1/natcos';
+
+    this.http.get<string[]>(this.buildApiUrl(ROLE_OPTIONS_ENDPOINT)).subscribe({
+      next: (roles) => {
+        this.roleOptions = this.toOptions(roles);
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        // Keep UI functional even if API is unavailable (empty list will still show required validation).
+        globalThis.console.error('Failed to load role options:', err);
+        this.roleOptions = [];
+        this.cdr.markForCheck();
+      },
+    });
+
+    this.http.get<string[]>(this.buildApiUrl(NATCOS_OPTIONS_ENDPOINT)).subscribe({
+      next: (natcos) => {
+        this.natcosOptions = this.toOptions(natcos);
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        globalThis.console.error('Failed to load NATCOS options:', err);
+        this.natcosOptions = [];
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
   // Adapter to match template API
-  closeDrawer() {
+  private closeDrawer() {
     this.onClose();
   }
 
-  addUser() {
+  private addUser() {
     this.form.patchValue({
       firstName: this.newUser.firstName,
       lastName: this.newUser.lastName,
@@ -300,7 +366,7 @@ export class AddUserDrawerComponent {
     this.resetForm();
   }
 
-  resetForm() {
+  private resetForm() {
     this.form.reset({
       status: 'active',
       role: '',
