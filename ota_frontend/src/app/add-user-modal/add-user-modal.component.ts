@@ -2,21 +2,20 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AddUserDrawerComponent } from '../add-user-drawer/add-user-drawer.component';
 
 /**
- * Compatibility wrapper for legacy templates using <app-add-user-modal>.
+ * Compatibility wrapper for templates using <app-add-user-modal>.
  *
- * The repository already contains the actual implementation as a drawer:
- * - selector: <app-add-user-drawer>
- * - inputs/outputs: visible / visibleChange / closed / userAdded
+ * IMPORTANT:
+ * The user template (attached error log) binds to:
+ * - [visible]
+ * - (visibleChange)
+ * - (close)
+ * - (userAdded)
  *
- * Some templates (per build error log) still reference <app-add-user-modal>
- * and bind to [visible] and (visibleChange). When Angular doesn't recognize
- * the element, (visibleChange) is treated like a DOM event and becomes type Event,
- * leading to TS2322.
+ * If the output name doesn't match (e.g., component emits `closed` but template listens to `close`),
+ * Angular may treat the unmatched event as a DOM event and `$event` becomes `Event`, which breaks:
+ *   (visibleChange)="showAddUserModal = $event"  // TS2322 if $event inferred as Event
  *
- * This wrapper restores:
- * - Known Angular element: app-add-user-modal
- * - Correctly typed two-way binding: visibleChange emits boolean
- * - Pass-through closed and userAdded outputs
+ * This wrapper therefore exposes output `close` and forwards the underlying drawer’s `closed`.
  */
 @Component({
   selector: 'app-add-user-modal',
@@ -26,7 +25,7 @@ import { AddUserDrawerComponent } from '../add-user-drawer/add-user-drawer.compo
     <app-add-user-drawer
       [visible]="visible"
       (visibleChange)="visibleChange.emit($event)"
-      (closed)="closed.emit()"
+      (closed)="close.emit()"
       (userAdded)="userAdded.emit()"
     />
   `,
@@ -35,8 +34,8 @@ export class AddUserModalComponent {
   @Input() visible = false;
   @Output() visibleChange = new EventEmitter<boolean>();
 
-  /** Emits when the modal/drawer is closed. */
-  @Output() closed = new EventEmitter<void>();
+  /** Emits when the modal/drawer is closed (matches template binding `(close)`). */
+  @Output() close = new EventEmitter<void>();
 
   /** Emits when a user is successfully added. */
   @Output() userAdded = new EventEmitter<void>();
