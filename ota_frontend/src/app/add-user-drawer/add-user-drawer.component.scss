@@ -208,8 +208,7 @@
 
   /* Role-mapping area uses tighter controls + smaller radius (per screenshot) */
   .section-card--other {
-    .p-select,
-    .p-multiselect {
+    .p-select {
       height: 30px;
       border-radius: 4px;
       border-color: #dadde3;
@@ -221,19 +220,12 @@
       color: #2b2f38;
     }
 
-    .p-select-trigger,
-    .p-multiselect-trigger {
+    .p-select-trigger {
       width: 28px;
       color: #2b2f38;
     }
 
-    .placeholder {
-      font-size: 12px;
-      color: #a7adb7;
-    }
-
     /* Dropdown panels (compact + minimal shadow) */
-    .p-multiselect-panel,
     .p-select-overlay {
       border: 1px solid #dadde3;
       border-radius: 4px;
@@ -242,12 +234,10 @@
       max-height: 180px;
     }
 
-    .p-multiselect-panel .p-multiselect-items,
     .p-select-overlay .p-select-list {
       padding: 4px 0;
     }
 
-    .p-multiselect-panel .p-multiselect-item,
     .p-select-overlay .p-select-option {
       padding: 6px 10px;
       font-size: 12px;
@@ -258,69 +248,14 @@
       }
     }
 
-    .p-multiselect-panel .p-multiselect-item.p-highlight,
     .p-select-overlay .p-select-option.p-highlight {
       background: #e9f2ff;
       color: #2b2f38;
     }
   }
-
-  /* Prevent any extra placeholder/label line under our selectedItems template */
-  .p-multiselect-label-container {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-  }
-  .p-multiselect-label {
-    display: none !important;
-  }
 }
 
-.selected-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0;
-  padding: 2px 0;
-}
 
-.custom-chip {
-  display: inline-flex;
-  align-items: center;
-  background-color: #ec4899;
-  color: white;
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 16px;
-  gap: 6px;
-
-  .chip-label {
-    font-weight: 500;
-    white-space: nowrap;
-  }
-
-  .chip-remove {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.85);
-    cursor: pointer;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.18);
-    }
-
-    i {
-      font-size: 11px;
-    }
-  }
-}
 
 .error-text {
   font-size: 12px;

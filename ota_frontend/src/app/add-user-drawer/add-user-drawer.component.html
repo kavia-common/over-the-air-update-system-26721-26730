@@ -194,9 +194,36 @@
 
       <!-- ================== CARD 3: Role mapping/unmapping ================== -->
       <div class="section-card section-card--other">
+        <!-- Roles (single-select) -->
+        <div class="form-row">
+          <label for="role" class="form-label">
+            Roles <span class="required-asterisk">*</span>
+          </label>
+
+          <div class="control">
+            <p-select
+              id="role"
+              formControlName="role"
+              [options]="roleOptions"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select Roles"
+              [showClear]="false"
+              [class.error]="isFieldInvalid('role')"
+              class="form-input"
+            >
+            </p-select>
+
+            @if (isFieldInvalid('role')) {
+              <div class="error-text">{{ getFieldErrorMessage('role') }}</div>
+            }
+          </div>
+        </div>
+
+        <!-- NATCOS (single-select) -->
         <div class="form-row">
           <label for="natcos" class="form-label">
-            NatCOS <span class="required-asterisk">*</span>
+            NATCOS <span class="required-asterisk">*</span>
           </label>
 
           <div class="control">
@@ -206,7 +233,7 @@
               [options]="natcosOptions"
               optionLabel="label"
               optionValue="value"
-              placeholder="Tap here..."
+              placeholder="Select NATCOS"
               [showClear]="false"
               [class.error]="isFieldInvalid('natcos')"
               class="form-input"
@@ -215,54 +242,6 @@
 
             @if (isFieldInvalid('natcos')) {
               <div class="error-text">{{ getFieldErrorMessage('natcos') }}</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label for="roles" class="form-label">
-            Role Type <span class="required-asterisk">*</span>
-          </label>
-
-          <div class="control">
-            <p-multiSelect
-              id="roles"
-              formControlName="roles"
-              [options]="roleOptions"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Tap here..."
-              [showToggleAll]="true"
-              [class.error]="isFieldInvalid('roles')"
-              class="form-input role-type-multiselect"
-            >
-              <!-- Keep existing display behavior fix; styling is updated to match role-mapping screenshot. -->
-              <ng-template let-value pTemplate="selectedItems">
-                @if (value && value.length) {
-                  <div class="selected-chips">
-                    @for (item of value; track item) {
-                      <div class="custom-chip">
-                        <span class="chip-label">{{ getRoleLabel(item) }}</span>
-                        <button
-                          type="button"
-                          class="chip-remove"
-                          (click)="removeRole(item, value)"
-                          [attr.aria-label]="'Remove ' + getRoleLabel(item)"
-                        >
-                          <i class="pi pi-times"></i>
-                        </button>
-                      </div>
-                    }
-                  </div>
-                }
-                @if (!value || value.length === 0) {
-                  <span class="placeholder">Tap here...</span>
-                }
-              </ng-template>
-            </p-multiSelect>
-
-            @if (isFieldInvalid('roles')) {
-              <div class="error-text">{{ getFieldErrorMessage('roles') }}</div>
             }
           </div>
         </div>

@@ -155,10 +155,11 @@ export class AddUserDrawerComponent {
         confirmPassword: ['', [Validators.required]],
 
         /**
-         * Role mapping/unmapping:
-         * - Multi-select list; selected = mapped, deselected/removed = unmapped.
+         * Roles mapping/unmapping (per screenshots):
+         * - Single-select dropdown; selected value = mapped role.
+         * - Changing selection replaces mapping (implicit unmap of previous role).
          */
-        roles: [[], [Validators.required]],
+        role: ['', [Validators.required]],
 
         natcos: ['', [Validators.required]],
         status: ['active', [Validators.required]],
@@ -266,18 +267,6 @@ export class AddUserDrawerComponent {
       .trim();
   }
 
-  getRoleLabel(roleValue: string): string {
-    const role = this.roleOptions.find((r) => r.value === roleValue);
-    return role ? role.label : roleValue;
-  }
-
-  removeRole(roleValue: string, selectedRoles: string[]): void {
-    const updatedRoles = (selectedRoles || []).filter((r) => r !== roleValue);
-    this.form.get('roles')?.setValue(updatedRoles);
-    this.form.get('roles')?.markAsDirty();
-    this.form.get('roles')?.markAsTouched();
-  }
-
   // Adapter to match template API
   closeDrawer() {
     this.onClose();
@@ -290,7 +279,7 @@ export class AddUserDrawerComponent {
       email: this.newUser.email,
       password: this.newUser.password,
       confirmPassword: this.newUser.confirmPassword,
-      roles: this.newUser.role ? [this.newUser.role] : [],
+      role: this.newUser.role,
       natcos: this.newUser.natco,
       status: this.newUser.status ? this.newUser.status.toLowerCase() : 'active',
     });
@@ -314,7 +303,7 @@ export class AddUserDrawerComponent {
   resetForm() {
     this.form.reset({
       status: 'active',
-      roles: [],
+      role: '',
       natcos: '',
     });
     this.submitted = false;
