@@ -1,14 +1,3 @@
 <div class="container">
-  <div class="demo-shell">
-    <h1 class="page-title">Users</h1>
-
-    <button type="button" class="open-btn" (click)="addUserOpen = true">
-      Open Add User Drawer
-    </button>
-  </div>
-
-  <app-add-user-drawer
-    [visible]="addUserOpen"
-    (closed)="addUserOpen = false"
-  ></app-add-user-drawer>
+  <router-outlet />
 </div>

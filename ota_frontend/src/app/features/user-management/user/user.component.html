@@ -1,0 +1,16 @@
+<section class="user-page">
+  <header class="user-page__header">
+    <h1 class="user-page__title">Users</h1>
+
+    <button type="button" class="user-page__open-btn" (click)="openAddUserModal()">
+      Add User
+    </button>
+  </header>
+
+  <app-add-user-modal
+    [visible]="showAddUserModal"
+    (visibleChange)="showAddUserModal = $event"
+    (closed)="onAddUserModalClose()"
+    (userAdded)="onUserAdded()"
+  />
+</section>

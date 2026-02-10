@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
-import { AddUserDrawerComponent } from './add-user-drawer/add-user-drawer.component';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [AddUserDrawerComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'ota_frontend is being generated';
-  addUserOpen = true;
 }
