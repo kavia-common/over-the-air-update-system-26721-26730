@@ -244,10 +244,17 @@
       }
     }
 
-    /* Selected chips in multiselect dropdown: keep them but ensure they don't break compact control */
+    /* Selected chips in multiselect: keep our custom selectedItems template as the ONLY visible content.
+       This prevents any extra placeholder/label line from appearing under the chips. */
     .p-multiselect-label-container {
       display: flex;
       align-items: center;
+      overflow: hidden;
+    }
+
+    /* PrimeNG may still render an internal label span; hide it so it can't appear as a second line. */
+    .p-multiselect-label {
+      display: none !important;
     }
 
     .placeholder {
