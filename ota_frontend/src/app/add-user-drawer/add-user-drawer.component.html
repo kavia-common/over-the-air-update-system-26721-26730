@@ -192,7 +192,7 @@
         </div>
       </div>
 
-      <!-- ================== CARD 3: Roles / NATCOS / Status / Tenant Role Mapping ================== -->
+      <!-- ================== CARD 3: Roles / NATCOS / Status ================== -->
       <div class="section-card section-card--other">
         <div class="form-row">
           <label for="roles" class="form-label">
@@ -264,82 +264,6 @@
 
             @if (isFieldInvalid('natcos')) {
               <div class="error-text">{{ getFieldErrorMessage('natcos') }}</div>
-            }
-          </div>
-        </div>
-
-        <!-- Tenant ↔ Role mapping UI (per screenshot) -->
-        <div class="form-row">
-          <label for="tenant" class="form-label">
-            Tenant <span class="required-asterisk">*</span>
-          </label>
-
-          <div class="control">
-            <p-select
-              id="tenant"
-              formControlName="tenantId"
-              [options]="tenantOptions"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Tap here..."
-              [showClear]="false"
-              [class.error]="isFieldInvalid('tenantId')"
-              class="form-input"
-              (onChange)="onTenantChange()"
-            >
-            </p-select>
-
-            @if (isFieldInvalid('tenantId')) {
-              <div class="error-text">{{ getFieldErrorMessage('tenantId') }}</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label for="roleTypes" class="form-label">
-            Role Type <span class="required-asterisk">*</span>
-          </label>
-
-          <div class="control">
-            <p-multiSelect
-              id="roleTypes"
-              formControlName="roleTypes"
-              [options]="roleTypeOptions"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Tap here..."
-              [showToggleAll]="true"
-              [class.error]="isFieldInvalid('roleTypes')"
-              class="form-input"
-              (onChange)="onRoleTypesChange()"
-            >
-              <!-- Match existing chips pattern for multi-select selections. -->
-              <ng-template let-value pTemplate="selectedItems">
-                @if (value && value.length) {
-                  <div class="selected-chips">
-                    @for (item of value; track item) {
-                      <div class="custom-chip">
-                        <span class="chip-label">{{ getRoleTypeLabel(item) }}</span>
-                        <button
-                          type="button"
-                          class="chip-remove"
-                          (click)="removeRoleType(item, value)"
-                          [attr.aria-label]="'Remove ' + getRoleTypeLabel(item)"
-                        >
-                          <i class="pi pi-times"></i>
-                        </button>
-                      </div>
-                    }
-                  </div>
-                }
-                @if (!value || value.length === 0) {
-                  <span class="placeholder">Tap here...</span>
-                }
-              </ng-template>
-            </p-multiSelect>
-
-            @if (isFieldInvalid('roleTypes')) {
-              <div class="error-text">{{ getFieldErrorMessage('roleTypes') }}</div>
             }
           </div>
         </div>

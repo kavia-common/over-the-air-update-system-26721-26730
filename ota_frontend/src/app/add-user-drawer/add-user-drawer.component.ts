@@ -33,6 +33,11 @@ import { SelectModule } from 'primeng/select';
  *   - NATCOS: no clear (X) icon (showClear=false)
  * - Adds confirmation box after clicking Add (before final submission)
  *
+ * CHANGE (per latest request):
+ * - Remove tenant↔role-type mapping behavior entirely.
+ * - Implement role mapping/unmapping only:
+ *   - Selecting/deselecting roles in the Roles multi-select represents mapping/unmapping.
+ *
  * NOTE:
  * The user-provided TS references MessageService/UserService/@ngx-translate. This repo template doesn't include
  * those services. To keep CI/build green and focus on UI as requested, this component simulates submit.
@@ -105,12 +110,6 @@ export class AddUserDrawerComponent {
     status: 'Active',
   };
 
-  /**
-   * Tenant ↔ RoleType mappings.
-   * We persist selections per-tenant so switching tenants does not lose prior choices.
-   */
-  tenantRoleMappings: Array<{ tenantId: string; roleTypeIds: string[] }> = [];
-
   form!: FormGroup;
   loading = false;
   submitted = false;
@@ -142,21 +141,6 @@ export class AddUserDrawerComponent {
     { label: 'Inactive', value: 'inactive' },
   ];
 
-  /** Tenant options (placeholder list for UI wiring). */
-  tenantOptions = [
-    { label: 'Lorem ipsum', value: 'tenant-1' },
-    { label: 'Lorem ipsum 2', value: 'tenant-2' },
-    { label: 'Lorem ipsum 3', value: 'tenant-3' },
-  ];
-
-  /** Role Type options (placeholder list matching screenshot pattern). */
-  roleTypeOptions = [
-    { label: 'Lorem ipsum 1', value: 'role-type-1' },
-    { label: 'Lorem ipsum 2', value: 'role-type-2' },
-    { label: 'Lorem ipsum 3', value: 'role-type-3' },
-    { label: 'Lorem ipsum 4', value: 'role-type-4' },
-  ];
-
   constructor() {
     this.initializeForm();
   }
@@ -169,13 +153,14 @@ export class AddUserDrawerComponent {
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, this.passwordValidator]],
         confirmPassword: ['', [Validators.required]],
+
+        /**
+         * Role mapping/unmapping:
+         * - Multi-select list; selected = mapped, deselected/removed = unmapped.
+         */
         roles: [[], [Validators.required]],
+
         natcos: ['', [Validators.required]],
-
-        // Tenant ↔ Role Type mapping (per screenshot)
-        tenantId: ['', [Validators.required]],
-        roleTypes: [[], [Validators.required]],
-
         status: ['active', [Validators.required]],
       },
       { validators: this.passwordMatchValidator },
@@ -293,63 +278,6 @@ export class AddUserDrawerComponent {
     this.form.get('roles')?.markAsTouched();
   }
 
-  getRoleTypeLabel(roleTypeValue: string): string {
-    const rt = this.roleTypeOptions.find((r) => r.value === roleTypeValue);
-    return rt ? rt.label : roleTypeValue;
-  }
-
-  removeRoleType(roleTypeValue: string, selectedRoleTypes: string[]): void {
-    const updated = (selectedRoleTypes || []).filter((r) => r !== roleTypeValue);
-    this.form.get('roleTypes')?.setValue(updated);
-    this.form.get('roleTypes')?.markAsDirty();
-    this.form.get('roleTypes')?.markAsTouched();
-    this.persistRoleTypesToMapping();
-  }
-
-  // PUBLIC_INTERFACE
-  onTenantChange(): void {
-    /** Loads the role-type selection for the selected tenant (persisted mapping). */
-    const tenantId = this.form.get('tenantId')?.value as string;
-
-    if (!tenantId) {
-      // No tenant selected → clear role types selection.
-      this.form.get('roleTypes')?.setValue([]);
-      this.form.get('roleTypes')?.markAsDirty();
-      this.form.get('roleTypes')?.markAsTouched();
-      return;
-    }
-
-    const existing = this.tenantRoleMappings.find((m) => m.tenantId === tenantId);
-    const roleTypeIds = existing?.roleTypeIds ?? [];
-    this.form.get('roleTypes')?.setValue(roleTypeIds);
-
-    // Selecting tenant is part of the mapping flow, mark as touched for validation UX.
-    this.form.get('tenantId')?.markAsTouched();
-    this.form.get('roleTypes')?.markAsTouched();
-  }
-
-  // PUBLIC_INTERFACE
-  onRoleTypesChange(): void {
-    /** Persists role-types to the selected tenant mapping (map/unmap). */
-    this.persistRoleTypesToMapping();
-  }
-
-  private persistRoleTypesToMapping(): void {
-    const tenantId = this.form.get('tenantId')?.value as string;
-    if (!tenantId) {
-      return;
-    }
-
-    const roleTypeIds = (this.form.get('roleTypes')?.value as string[]) ?? [];
-    const idx = this.tenantRoleMappings.findIndex((m) => m.tenantId === tenantId);
-
-    if (idx >= 0) {
-      this.tenantRoleMappings[idx] = { tenantId, roleTypeIds: [...roleTypeIds] };
-    } else {
-      this.tenantRoleMappings.push({ tenantId, roleTypeIds: [...roleTypeIds] });
-    }
-  }
-
   // Adapter to match template API
   closeDrawer() {
     this.onClose();
@@ -388,19 +316,13 @@ export class AddUserDrawerComponent {
       status: 'active',
       roles: [],
       natcos: '',
-      tenantId: '',
-      roleTypes: [],
     });
-    this.tenantRoleMappings = [];
     this.submitted = false;
     this.showConfirmation = false;
   }
 
   onSubmit() {
     this.submitted = true;
-
-    // Ensure latest roleTypes selection is persisted before validation/submission.
-    this.persistRoleTypesToMapping();
 
     if (this.form.invalid) {
       return;
