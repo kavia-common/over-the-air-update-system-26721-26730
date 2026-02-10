@@ -10,6 +10,19 @@
   --danger: #e53935;
   --accent: #e2007e;
   --accent-500: #ec4899;
+
+  /* Confirmation box palette (from extracted screenshot/design notes) */
+  --confirm-canvas-bg: #e9eff2;
+  --confirm-card-bg: #ffffff;
+  --confirm-header-bg: #f2f4f5;
+  --confirm-divider: #e3e6e8;
+  --confirm-text-strong: #2b2f33;
+  --confirm-text-body: #5f666c;
+  --confirm-btn-secondary-bg: #d5d9dd;
+  --confirm-btn-secondary-border: #b7bdc3;
+  --confirm-btn-secondary-text: #3f464c;
+  --confirm-btn-primary-bg: #e11b7a;
+  --confirm-btn-primary-text: #ffffff;
 }
 
 /* ------------------------------
@@ -384,6 +397,82 @@
 }
 
 /* Mobile: stack label above control */
+/* Confirmation box */
+.confirm-card {
+  width: 100%;
+  max-width: 520px; /* keeps the card from spanning full drawer width; matches screenshot feel */
+  background: var(--confirm-card-bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.confirm-card__header {
+  background: var(--confirm-header-bg);
+  border-bottom: 1px solid var(--confirm-divider);
+  padding: 9px 12px;
+}
+
+.confirm-card__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--confirm-text-strong);
+}
+
+.confirm-card__body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.confirm-card__msg {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--confirm-text-body);
+}
+
+.confirm-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.confirm-btn {
+  appearance: none;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 22px;
+  cursor: pointer;
+  user-select: none;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.confirm-btn--secondary {
+  background: var(--confirm-btn-secondary-bg);
+  border: 1px solid var(--confirm-btn-secondary-border);
+  color: var(--confirm-btn-secondary-text);
+}
+
+.confirm-btn--primary {
+  background: var(--confirm-btn-primary-bg);
+  border: 1px solid var(--confirm-btn-primary-bg);
+  color: var(--confirm-btn-primary-text);
+}
+
+/* Keep the drawer canvas tint behind the confirmation card (screenshot shows a greyer canvas) */
+::ng-deep .add-user-modal .p-drawer-content {
+  background: var(--confirm-canvas-bg);
+}
+
 @media (max-width: 640px) {
   .form-content {
     padding: 16px;
@@ -412,5 +501,14 @@
     align-items: flex-start;
     gap: 12px;
     padding-top: 2px;
+  }
+
+  .confirm-card {
+    max-width: 100%;
+  }
+
+  .confirm-card__actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 }

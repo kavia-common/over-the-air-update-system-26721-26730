@@ -28,244 +28,283 @@
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="add-user-form">
     <div class="form-content">
-      <!-- ================== CARD 1: Identity ================== -->
-      <div class="section-card section-card--identity">
-        <div class="form-row">
-          <label for="firstName" class="form-label">
-            First Name <span class="required-asterisk">*</span>
-          </label>
+      @if (showConfirmation) {
+        <section
+          class="confirm-card"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby="confirmTitle"
+          aria-describedby="confirmMsg"
+        >
+          <header class="confirm-card__header">
+            <h3 id="confirmTitle" class="confirm-card__title">Add User</h3>
+          </header>
 
-          <div class="control">
-            <input
-              id="firstName"
-              type="text"
-              pInputText
-              formControlName="firstName"
-              placeholder="Tap here..."
-              [class.error]="isFieldInvalid('firstName')"
-              class="form-input"
-            />
-            @if (isFieldInvalid('firstName')) {
-              <div class="error-text">{{ getFieldErrorMessage('firstName') }}</div>
-            }
+          <div class="confirm-card__body">
+            <p id="confirmMsg" class="confirm-card__msg">
+              Are you sure you want to add user?
+            </p>
+
+            <div class="confirm-card__actions">
+              <button type="button" class="confirm-btn confirm-btn--secondary" (click)="onConfirmCancel()">
+                Cancel
+              </button>
+              <button type="button" class="confirm-btn confirm-btn--primary" (click)="onConfirmProceed()">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </section>
+      } @else {
+        <!-- ================== CARD 1: Identity ================== -->
+        <div class="section-card section-card--identity">
+          <div class="form-row">
+            <label for="firstName" class="form-label">
+              First Name <span class="required-asterisk">*</span>
+            </label>
+
+            <div class="control">
+              <input
+                id="firstName"
+                type="text"
+                pInputText
+                formControlName="firstName"
+                placeholder="Tap here..."
+                [class.error]="isFieldInvalid('firstName')"
+                class="form-input"
+              />
+              @if (isFieldInvalid('firstName')) {
+                <div class="error-text">{{ getFieldErrorMessage('firstName') }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="lastName" class="form-label">
+              Last Name <span class="required-asterisk">*</span>
+            </label>
+
+            <div class="control">
+              <input
+                id="lastName"
+                type="text"
+                pInputText
+                formControlName="lastName"
+                placeholder="Tap here..."
+                [class.error]="isFieldInvalid('lastName')"
+                class="form-input"
+              />
+              @if (isFieldInvalid('lastName')) {
+                <div class="error-text">{{ getFieldErrorMessage('lastName') }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="email" class="form-label">
+              Email <span class="required-asterisk">*</span>
+            </label>
+
+            <div class="control">
+              <input
+                id="email"
+                type="email"
+                pInputText
+                formControlName="email"
+                placeholder="Tap here..."
+                [class.error]="isFieldInvalid('email')"
+                class="form-input"
+              />
+              @if (isFieldInvalid('email')) {
+                <div class="error-text">{{ getFieldErrorMessage('email') }}</div>
+              }
+            </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <label for="lastName" class="form-label">
-            Last Name <span class="required-asterisk">*</span>
-          </label>
+        <!-- ================== CARD 2: Credentials ================== -->
+        <div class="section-card section-card--credentials">
+          <div class="form-row">
+            <label for="password" class="form-label">
+              Password <span class="required-asterisk">*</span>
+            </label>
 
-          <div class="control">
-            <input
-              id="lastName"
-              type="text"
-              pInputText
-              formControlName="lastName"
-              placeholder="Tap here..."
-              [class.error]="isFieldInvalid('lastName')"
-              class="form-input"
-            />
-            @if (isFieldInvalid('lastName')) {
-              <div class="error-text">{{ getFieldErrorMessage('lastName') }}</div>
-            }
+            <div class="control">
+              <input
+                id="password"
+                type="password"
+                pInputText
+                formControlName="password"
+                placeholder="Tap here..."
+                [class.error]="isFieldInvalid('password')"
+                class="form-input"
+              />
+              @if (isFieldInvalid('password')) {
+                <div class="error-text">{{ getFieldErrorMessage('password') }}</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="confirmPassword" class="form-label">
+              Confirm Password <span class="required-asterisk">*</span>
+            </label>
+
+            <div class="control">
+              <input
+                id="confirmPassword"
+                type="password"
+                pInputText
+                formControlName="confirmPassword"
+                placeholder="Tap here..."
+                [class.error]="
+                  isFieldInvalid('confirmPassword') ||
+                  (form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched)
+                "
+                class="form-input"
+              />
+              @if (isFieldInvalid('confirmPassword') || (form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched)) {
+                <div class="error-text">{{ getConfirmPasswordErrorMessage() }}</div>
+              }
+            </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <label for="email" class="form-label">
-            Email <span class="required-asterisk">*</span>
-          </label>
+        <!-- ================== CARD 3: Roles / NATCOS / Status ================== -->
+        <div class="section-card section-card--other">
+          <div class="form-row">
+            <label for="roles" class="form-label">
+              Roles <span class="required-asterisk">*</span>
+            </label>
 
-          <div class="control">
-            <input
-              id="email"
-              type="email"
-              pInputText
-              formControlName="email"
-              placeholder="Tap here..."
-              [class.error]="isFieldInvalid('email')"
-              class="form-input"
-            />
-            @if (isFieldInvalid('email')) {
-              <div class="error-text">{{ getFieldErrorMessage('email') }}</div>
-            }
+            <div class="control">
+              <p-multiSelect
+                id="roles"
+                formControlName="roles"
+                [options]="roleOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Tap here..."
+                [showToggleAll]="true"
+                [class.error]="isFieldInvalid('roles')"
+                class="form-input"
+              >
+                <ng-template let-value pTemplate="selectedItems">
+                  @if (value && value.length) {
+                    <div class="selected-chips">
+                      @for (item of value; track item) {
+                        <div class="custom-chip">
+                          <span class="chip-label">{{ getRoleLabel(item) }}</span>
+                          <button
+                            type="button"
+                            class="chip-remove"
+                            (click)="removeRole(item, value)"
+                            [attr.aria-label]="'Remove ' + getRoleLabel(item)"
+                          >
+                            <i class="pi pi-times"></i>
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  }
+                  @if (!value || value.length === 0) {
+                    <span class="placeholder">Tap here...</span>
+                  }
+                </ng-template>
+              </p-multiSelect>
+
+              @if (isFieldInvalid('roles')) {
+                <div class="error-text">{{ getFieldErrorMessage('roles') }}</div>
+              }
+            </div>
           </div>
-        </div>
-      </div>
 
-      <!-- ================== CARD 2: Credentials ================== -->
-      <div class="section-card section-card--credentials">
-        <div class="form-row">
-          <label for="password" class="form-label">
-            Password <span class="required-asterisk">*</span>
-          </label>
+          <div class="form-row">
+            <label for="natcos" class="form-label">
+              NATCOS <span class="required-asterisk">*</span>
+            </label>
 
-          <div class="control">
-            <input
-              id="password"
-              type="password"
-              pInputText
-              formControlName="password"
-              placeholder="Tap here..."
-              [class.error]="isFieldInvalid('password')"
-              class="form-input"
-            />
-            @if (isFieldInvalid('password')) {
-              <div class="error-text">{{ getFieldErrorMessage('password') }}</div>
-            }
+            <div class="control">
+              <p-select
+                id="natcos"
+                formControlName="natcos"
+                [options]="natcosOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Tap here..."
+                [showClear]="false"
+                [class.error]="isFieldInvalid('natcos')"
+                class="form-input"
+              >
+              </p-select>
+
+              @if (isFieldInvalid('natcos')) {
+                <div class="error-text">{{ getFieldErrorMessage('natcos') }}</div>
+              }
+            </div>
           </div>
-        </div>
 
-        <div class="form-row">
-          <label for="confirmPassword" class="form-label">
-            Confirm Password <span class="required-asterisk">*</span>
-          </label>
+          <div class="form-row form-row--status">
+            <label for="status-active" class="form-label">
+              Status Type <span class="required-asterisk">*</span>
+            </label>
 
-          <div class="control">
-            <input
-              id="confirmPassword"
-              type="password"
-              pInputText
-              formControlName="confirmPassword"
-              placeholder="Tap here..."
-              [class.error]="
-                isFieldInvalid('confirmPassword') ||
-                (form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched)
-              "
-              class="form-input"
-            />
-            @if (isFieldInvalid('confirmPassword') || (form.errors?.['passwordMismatch'] && form.get('confirmPassword')?.touched)) {
-              <div class="error-text">{{ getConfirmPasswordErrorMessage() }}</div>
-            }
-          </div>
-        </div>
-      </div>
+            <div class="control">
+              <div class="radio-options" role="radiogroup" aria-label="Status Type">
+                <div class="radio-option">
+                  <input
+                    id="status-active"
+                    type="radio"
+                    formControlName="status"
+                    value="active"
+                    class="radio-input"
+                  />
+                  <label for="status-active" class="radio-label">Active</label>
+                </div>
 
-      <!-- ================== CARD 3: Roles / NATCOS / Status ================== -->
-      <div class="section-card section-card--other">
-        <div class="form-row">
-          <label for="roles" class="form-label">
-            Roles <span class="required-asterisk">*</span>
-          </label>
-
-          <div class="control">
-            <p-multiSelect
-              id="roles"
-              formControlName="roles"
-              [options]="roleOptions"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Tap here..."
-              [showToggleAll]="true"
-              [class.error]="isFieldInvalid('roles')"
-              class="form-input"
-            >
-              <ng-template let-value pTemplate="selectedItems">
-                @if (value && value.length) {
-                  <div class="selected-chips">
-                    @for (item of value; track item) {
-                      <div class="custom-chip">
-                        <span class="chip-label">{{ getRoleLabel(item) }}</span>
-                        <button
-                          type="button"
-                          class="chip-remove"
-                          (click)="removeRole(item, value)"
-                          [attr.aria-label]="'Remove ' + getRoleLabel(item)"
-                        >
-                          <i class="pi pi-times"></i>
-                        </button>
-                      </div>
-                    }
-                  </div>
-                }
-                @if (!value || value.length === 0) {
-                  <span class="placeholder">Tap here...</span>
-                }
-              </ng-template>
-            </p-multiSelect>
-
-            @if (isFieldInvalid('roles')) {
-              <div class="error-text">{{ getFieldErrorMessage('roles') }}</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label for="natcos" class="form-label">
-            NATCOS <span class="required-asterisk">*</span>
-          </label>
-
-          <div class="control">
-            <p-select
-              id="natcos"
-              formControlName="natcos"
-              [options]="natcosOptions"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Tap here..."
-              [showClear]="false"
-              [class.error]="isFieldInvalid('natcos')"
-              class="form-input"
-            >
-            </p-select>
-
-            @if (isFieldInvalid('natcos')) {
-              <div class="error-text">{{ getFieldErrorMessage('natcos') }}</div>
-            }
-          </div>
-        </div>
-
-        <div class="form-row form-row--status">
-          <label for="status-active" class="form-label">
-            Status Type <span class="required-asterisk">*</span>
-          </label>
-
-          <div class="control">
-            <div class="radio-options" role="radiogroup" aria-label="Status Type">
-              <div class="radio-option">
-                <input
-                  id="status-active"
-                  type="radio"
-                  formControlName="status"
-                  value="active"
-                  class="radio-input"
-                />
-                <label for="status-active" class="radio-label">Active</label>
-              </div>
-
-              <div class="radio-option">
-                <input
-                  id="status-inactive"
-                  type="radio"
-                  formControlName="status"
-                  value="inactive"
-                  class="radio-input"
-                />
-                <label for="status-inactive" class="radio-label">Inactive</label>
+                <div class="radio-option">
+                  <input
+                    id="status-inactive"
+                    type="radio"
+                    formControlName="status"
+                    value="inactive"
+                    class="radio-input"
+                  />
+                  <label for="status-inactive" class="radio-label">Inactive</label>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      }
     </div>
 
     <div class="modal-footer">
-      <button
-        type="button"
-        pButton
-        label="Cancel"
-        class="p-button-secondary cancel-btn"
-        (click)="onClose()"
-      ></button>
-      <button
-        type="submit"
-        pButton
-        label="Add"
-        class="p-button add-btn"
-        [disabled]="form.invalid || loading"
-        [loading]="loading"
-      ></button>
+      @if (showConfirmation) {
+        <button
+          type="button"
+          pButton
+          label="Back"
+          class="p-button-secondary cancel-btn"
+          (click)="onConfirmCancel()"
+        ></button>
+      } @else {
+        <button
+          type="button"
+          pButton
+          label="Cancel"
+          class="p-button-secondary cancel-btn"
+          (click)="onClose()"
+        ></button>
+        <button
+          type="submit"
+          pButton
+          label="Add"
+          class="p-button add-btn"
+          [disabled]="form.invalid || loading"
+          [loading]="loading"
+        ></button>
+      }
     </div>
   </form>
 </p-drawer>

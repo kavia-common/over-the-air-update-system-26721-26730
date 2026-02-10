@@ -39,6 +39,9 @@ export class AddUserDrawerComponent {
 
   loading = false;
 
+  /** When true, the form is replaced by the embedded confirmation box. */
+  showConfirmation = false;
+
   // Simple options to keep template functional.
   roleOptions = [
     { label: 'Admin', value: 'admin' },
@@ -78,14 +81,28 @@ export class AddUserDrawerComponent {
   }
 
   onClose() {
+    this.showConfirmation = false;
     this.closed.emit();
   }
 
   onSubmit() {
     if (this.form.invalid) return;
 
-    // Placeholder submission hook.
+    // After "Add" submit, show the confirmation UI (as requested).
+    this.showConfirmation = true;
+  }
+
+  // PUBLIC_INTERFACE
+  onConfirmCancel() {
+    /** Closes the confirmation box and returns to the form. */
+    this.showConfirmation = false;
+  }
+
+  // PUBLIC_INTERFACE
+  onConfirmProceed() {
+    /** Simulates the final submission after user confirmation, then closes the drawer. */
     this.loading = true;
+
     globalThis.setTimeout(() => {
       this.loading = false;
       this.onClose();
